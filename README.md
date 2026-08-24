@@ -5,6 +5,12 @@ construcción y remodelación en Virginia. Este es el MVP de la Fase 1: una
 página única con navegación por anclas, pensada para presentarse al cliente
 y avanzar luego a la Fase 2 (sistema de presupuestos por WhatsApp + IA).
 
+Este repositorio evoluciona hacia una **plataforma SaaS multi-tenant de CRM
++ IA para negocios de servicios** (no solo construcción), de la cual Jireh
+Contractor es el primer negocio (tenant). Ver la arquitectura, el esquema de
+base de datos y el plan de desarrollo por fases en
+[`docs/plataforma/`](./docs/plataforma/ARQUITECTURA.md).
+
 ## Stack
 
 - [Next.js](https://nextjs.org) (App Router) + TypeScript
