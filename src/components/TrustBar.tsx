@@ -1,36 +1,37 @@
 import { Award, Building2, HardHat, MapPin } from "lucide-react";
 import CountUp from "./CountUp";
+import type { SiteContent } from "@/lib/site-content/types";
 
-const stats = [
-  {
-    icon: Award,
-    value: <CountUp value={20} suffix="+" />,
-    label: "Años de experiencia",
-  },
-  {
-    icon: HardHat,
-    value: <CountUp value={150} suffix="+" />,
-    label: "Proyectos completados",
-  },
-  {
-    icon: Building2,
-    value: <CountUp value={3} />,
-    label: "Residencial, remodelación y comercial",
-  },
-  {
-    icon: MapPin,
-    value: "Virginia",
-    label: "Zona de cobertura",
-  },
-];
+export default function TrustBar({ content }: { content: SiteContent["trustBar"] }) {
+  const stats = [
+    {
+      icon: Award,
+      value: <CountUp value={content.stat1Value} suffix={content.stat1Suffix} />,
+      label: content.stat1Label,
+    },
+    {
+      icon: HardHat,
+      value: <CountUp value={content.stat2Value} suffix={content.stat2Suffix} />,
+      label: content.stat2Label,
+    },
+    {
+      icon: Building2,
+      value: <CountUp value={content.stat3Value} suffix={content.stat3Suffix} />,
+      label: content.stat3Label,
+    },
+    {
+      icon: MapPin,
+      value: content.stat4Value,
+      label: content.stat4Label,
+    },
+  ];
 
-export default function TrustBar() {
   return (
     <section className="bg-charcoal-850">
       <div className="mx-auto grid max-w-[1320px] grid-cols-2 divide-x divide-y divide-charcoal-700 border-charcoal-700 sm:divide-y-0 lg:grid-cols-4">
-        {stats.map((stat) => (
+        {stats.map((stat, i) => (
           <div
-            key={stat.label}
+            key={i}
             className="flex flex-col items-start gap-3 border-charcoal-700 px-6 py-10 sm:px-8 lg:py-14"
           >
             <stat.icon className="text-amber-400" size={26} strokeWidth={1.6} />

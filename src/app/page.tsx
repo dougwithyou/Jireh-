@@ -11,25 +11,28 @@ import Testimonials from "@/components/Testimonials";
 import BidCTA from "@/components/BidCTA";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { getSiteContent } from "@/lib/site-content/get";
 
-export default function Home() {
+export default async function Home() {
+  const content = await getSiteContent();
+
   return (
     <>
       <Header />
       <main className="flex-1">
-        <Hero />
+        <Hero content={content.hero} />
         <HazardStripe />
-        <TrustBar />
-        <Services />
-        <Portfolio />
-        <Process />
-        <Commitment />
-        <About />
-        <Testimonials />
-        <BidCTA />
-        <Contact />
+        <TrustBar content={content.trustBar} />
+        <Services content={content.services} />
+        <Portfolio content={content.portfolio} />
+        <Process content={content.process} />
+        <Commitment content={content.commitment} />
+        <About content={content.about} />
+        <Testimonials content={content.testimonials} />
+        <BidCTA content={content.bidCta} />
+        <Contact content={content.contact} />
       </main>
-      <Footer />
+      <Footer content={content.footer} />
     </>
   );
 }
