@@ -2,38 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import ConstructionArt, {
-  ConstructionVariant,
-} from "./illustrations/ConstructionArt";
+import ConstructionArt from "./illustrations/ConstructionArt";
 import Reveal from "./Reveal";
 import type { SiteContent } from "@/lib/site-content/types";
 
 const categories = ["Todos", "Residencial", "Remodelación", "Comercial", "Diseño"] as const;
 
-// Ilustración placeholder por posición, usada mientras content.projects[i].imageUrl
-// esté vacío. El super admin solo edita título/categoría/foto, no esta variante.
-const illustrationVariants: ConstructionVariant[] = [
-  "house-frame",
-  "interior",
-  "commercial",
-  "renovation",
-  "blueprint",
-  "skyline",
-];
-
 export default function Portfolio({ content }: { content: SiteContent["portfolio"] }) {
   const [filter, setFilter] = useState<(typeof categories)[number]>("Todos");
 
-  const projects = content.projects.map((project, i) => ({
-    ...project,
-    variant: illustrationVariants[i] ?? "skyline",
-  }));
-
   const filtered = useMemo(
     () =>
-      filter === "Todos" ? projects : projects.filter((p) => p.category === filter),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filter, content]
+      filter === "Todos"
+        ? content.projects
+        : content.projects.filter((p) => p.category === filter),
+    [filter, content.projects]
   );
 
   return (
@@ -88,7 +71,7 @@ export default function Portfolio({ content }: { content: SiteContent["portfolio
                     />
                   ) : (
                     <ConstructionArt
-                      variant={project.variant}
+                      variant={project.illustrationVariant}
                       id={`portfolio-${project.title}-${i}`}
                       className="h-full w-full transition-transform duration-700 group-hover:scale-105"
                     />

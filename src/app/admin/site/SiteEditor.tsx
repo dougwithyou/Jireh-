@@ -1,14 +1,21 @@
 "use client";
 
 import { useActionState } from "react";
-import type { SiteContent } from "@/lib/site-content/types";
+import { PORTFOLIO_ILLUSTRATIONS, SERVICE_ICONS, type SiteContent } from "@/lib/site-content/types";
 import {
+  addPortfolioItem,
+  addServiceItem,
+  addTestimonialItem,
+  removePortfolioItem,
+  removeServiceItem,
+  removeTestimonialItem,
   updateAbout,
   updateBidCta,
   updateCommitment,
   updateContact,
   updateFooter,
   updateHero,
+  updateNav,
   updatePortfolio,
   updateProcess,
   updateServices,
@@ -23,14 +30,18 @@ const PORTFOLIO_CATEGORIES = ["Residencial", "Remodelación", "Comercial", "Dise
 export function SiteEditor({ content }: { content: SiteContent }) {
   return (
     <div className="space-y-6">
+      <NavSection content={content.nav} />
       <HeroSection content={content.hero} />
       <TrustBarSection content={content.trustBar} />
-      <ServicesSection content={content.services} />
-      <PortfolioSection content={content.portfolio} />
+      <ServicesSection key={`services-${content.services.items.length}`} content={content.services} />
+      <PortfolioSection key={`portfolio-${content.portfolio.projects.length}`} content={content.portfolio} />
       <ProcessSection content={content.process} />
       <CommitmentSection content={content.commitment} />
       <AboutSection content={content.about} />
-      <TestimonialsSection content={content.testimonials} />
+      <TestimonialsSection
+        key={`testimonials-${content.testimonials.items.length}`}
+        content={content.testimonials}
+      />
       <BidCtaSection content={content.bidCta} />
       <ContactSection content={content.contact} />
       <FooterSection content={content.footer} />
@@ -220,6 +231,54 @@ function ImageField({
   );
 }
 
+function AddItemButton({ label, formAction }: { label: string; formAction: () => void }) {
+  return (
+    <button
+      type="submit"
+      formAction={formAction}
+      className="w-full border border-dashed border-neutral-300 py-2.5 text-sm font-medium text-neutral-600 hover:border-neutral-400 hover:text-neutral-900"
+    >
+      {label}
+    </button>
+  );
+}
+
+function RemoveItemButton({ formAction }: { formAction: () => void }) {
+  return (
+    <button
+      type="submit"
+      formAction={formAction}
+      className="text-xs font-medium text-red-600 hover:underline"
+    >
+      Eliminar
+    </button>
+  );
+}
+
+function NavSection({ content }: { content: SiteContent["nav"] }) {
+  const [state, action, pending] = useActionState(updateNav, initialState);
+  return (
+    <form action={action}>
+      <SectionCard
+        title="Menú de navegación"
+        description="Los textos del menú y del botón de acción. Los destinos de cada link quedan fijos (apuntan a cada sección del sitio)."
+        state={state}
+        pending={pending}
+      >
+        <div className="grid grid-cols-3 gap-4">
+          <Field label="Inicio" name="inicioLabel" defaultValue={content.inicioLabel} />
+          <Field label="Servicios" name="serviciosLabel" defaultValue={content.serviciosLabel} />
+          <Field label="Proyectos" name="proyectosLabel" defaultValue={content.proyectosLabel} />
+          <Field label="Proceso" name="procesoLabel" defaultValue={content.procesoLabel} />
+          <Field label="Nosotros" name="nosotrosLabel" defaultValue={content.nosotrosLabel} />
+          <Field label="Contacto" name="contactoLabel" defaultValue={content.contactoLabel} />
+        </div>
+        <Field label="Botón de acción (navbar)" name="ctaLabel" defaultValue={content.ctaLabel} />
+      </SectionCard>
+    </form>
+  );
+}
+
 function HeroSection({ content }: { content: SiteContent["hero"] }) {
   const [state, action, pending] = useActionState(updateHero, initialState);
   return (
@@ -280,21 +339,37 @@ function ServicesSection({ content }: { content: SiteContent["services"] }) {
   const [state, action, pending] = useActionState(updateServices, initialState);
   return (
     <form action={action}>
+      <input type="hidden" name="itemCount" value={content.items.length} />
       <SectionCard title="Servicios" state={state} pending={pending}>
         <Field label="Eyebrow" name="eyebrow" defaultValue={content.eyebrow} />
         <Field label="Título" name="heading" defaultValue={content.heading} />
         <TextAreaField label="Intro" name="intro" defaultValue={content.intro} />
         {content.items.map((item, i) => (
           <div key={i} className="space-y-2 border-t border-neutral-100 pt-4">
-            <Field label={`Servicio ${i + 1} — título`} name={`item${i}Title`} defaultValue={item.title} />
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-neutral-500">
+                Servicio {i + 1}
+              </span>
+              <RemoveItemButton formAction={removeServiceItem.bind(null, i)} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="Título" name={`item${i}Title`} defaultValue={item.title} />
+              <SelectField
+                label="Ícono"
+                name={`item${i}Icon`}
+                defaultValue={item.iconName}
+                options={[...SERVICE_ICONS]}
+              />
+            </div>
             <TextAreaField
-              label={`Servicio ${i + 1} — descripción`}
+              label="Descripción"
               name={`item${i}Description`}
               defaultValue={item.description}
               rows={2}
             />
           </div>
         ))}
+        <AddItemButton label="+ Agregar servicio" formAction={addServiceItem} />
       </SectionCard>
     </form>
   );
@@ -304,9 +379,10 @@ function PortfolioSection({ content }: { content: SiteContent["portfolio"] }) {
   const [state, action, pending] = useActionState(updatePortfolio, initialState);
   return (
     <form action={action}>
+      <input type="hidden" name="projectCount" value={content.projects.length} />
       <SectionCard
         title="Proyectos"
-        description="Si no subís foto, se usa la ilustración de referencia."
+        description="Si no subís foto, se usa la ilustración de referencia elegida."
         state={state}
         pending={pending}
       >
@@ -315,12 +391,25 @@ function PortfolioSection({ content }: { content: SiteContent["portfolio"] }) {
         <TextAreaField label="Intro" name="intro" defaultValue={content.intro} rows={2} />
         {content.projects.map((project, i) => (
           <div key={i} className="grid grid-cols-2 gap-4 border-t border-neutral-100 pt-4">
-            <Field label={`Proyecto ${i + 1} — título`} name={`project${i}Title`} defaultValue={project.title} />
+            <div className="col-span-2 flex items-center justify-between">
+              <span className="text-xs font-semibold text-neutral-500">
+                Proyecto {i + 1}
+              </span>
+              <RemoveItemButton formAction={removePortfolioItem.bind(null, i)} />
+            </div>
+            <Field label="Título" name={`project${i}Title`} defaultValue={project.title} />
             <SelectField
               label="Categoría"
               name={`project${i}Category`}
               defaultValue={project.category}
               options={PORTFOLIO_CATEGORIES}
+            />
+            <SelectField
+              label="Ilustración de referencia (si no hay foto)"
+              name={`project${i}Illustration`}
+              defaultValue={project.illustrationVariant}
+              options={[...PORTFOLIO_ILLUSTRATIONS]}
+              className="col-span-2"
             />
             <ImageField
               label="Foto"
@@ -332,6 +421,7 @@ function PortfolioSection({ content }: { content: SiteContent["portfolio"] }) {
             />
           </div>
         ))}
+        <AddItemButton label="+ Agregar proyecto" formAction={addPortfolioItem} />
       </SectionCard>
     </form>
   );
@@ -414,19 +504,27 @@ function TestimonialsSection({ content }: { content: SiteContent["testimonials"]
   const [state, action, pending] = useActionState(updateTestimonials, initialState);
   return (
     <form action={action}>
+      <input type="hidden" name="itemCount" value={content.items.length} />
       <SectionCard title="Testimonios" state={state} pending={pending}>
         <Field label="Eyebrow" name="eyebrow" defaultValue={content.eyebrow} />
         <Field label="Título" name="heading" defaultValue={content.heading} />
         <TextAreaField label="Intro" name="intro" defaultValue={content.intro} rows={2} />
         {content.items.map((item, i) => (
           <div key={i} className="space-y-2 border-t border-neutral-100 pt-4">
-            <TextAreaField label={`Reseña ${i + 1}`} name={`item${i}Quote`} defaultValue={item.quote} rows={2} />
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-neutral-500">
+                Testimonio {i + 1}
+              </span>
+              <RemoveItemButton formAction={removeTestimonialItem.bind(null, i)} />
+            </div>
+            <TextAreaField label="Reseña" name={`item${i}Quote`} defaultValue={item.quote} rows={2} />
             <div className="grid grid-cols-2 gap-4">
               <Field label="Nombre" name={`item${i}Name`} defaultValue={item.name} />
               <Field label="Ubicación" name={`item${i}Location`} defaultValue={item.location} />
             </div>
           </div>
         ))}
+        <AddItemButton label="+ Agregar testimonio" formAction={addTestimonialItem} />
       </SectionCard>
     </form>
   );

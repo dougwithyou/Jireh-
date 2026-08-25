@@ -7,6 +7,15 @@ import type { SiteContent } from "./types";
  * se quede sin contenido.
  */
 export const defaultSiteContent: SiteContent = {
+  nav: {
+    inicioLabel: "Inicio",
+    serviciosLabel: "Servicios",
+    proyectosLabel: "Proyectos",
+    procesoLabel: "Proceso",
+    nosotrosLabel: "Nosotros",
+    contactoLabel: "Contacto",
+    ctaLabel: "Solicitar presupuesto",
+  },
   hero: {
     eyebrow: "Virginia, EE. UU. · Construcción y remodelación · 20+ años",
     headlineLine1: "CONSTRUIMOS PARA",
@@ -40,21 +49,25 @@ export const defaultSiteContent: SiteContent = {
         title: "Construcción de vivienda desde cero",
         description:
           "Diseñamos y construimos tu casa desde los cimientos, acompañándote en cada etapa del proceso con planificación clara y control de calidad.",
+        iconName: "Home",
       },
       {
         title: "Remodelaciones residenciales",
         description:
           "Cocinas, baños, ampliaciones y remodelaciones completas que renuevan tu hogar sin sacrificar la calidad ni los plazos acordados.",
+        iconName: "Hammer",
       },
       {
         title: "Proyectos comerciales",
         description:
           "Construcción y adecuación de espacios comerciales, con la experiencia necesaria para cumplir normativas y tiempos de entrega.",
+        iconName: "Building2",
       },
       {
         title: "Otros servicios",
         description:
           "Espacio configurable: agrega aquí servicios adicionales como reparaciones, mantenimiento o proyectos especializados.",
+        iconName: "Settings",
       },
     ],
   },
@@ -64,12 +77,12 @@ export const defaultSiteContent: SiteContent = {
     intro:
       "Imágenes referenciales — próximamente reemplazadas por fotografías reales de nuestros proyectos.",
     projects: [
-      { title: "Vivienda nueva — estructura", category: "Residencial", imageUrl: null },
-      { title: "Remodelación de cocina", category: "Remodelación", imageUrl: null },
-      { title: "Local comercial", category: "Comercial", imageUrl: null },
-      { title: "Remodelación en proceso", category: "Remodelación", imageUrl: null },
-      { title: "Planificación de proyecto", category: "Diseño", imageUrl: null },
-      { title: "Obra en construcción", category: "Residencial", imageUrl: null },
+      { title: "Vivienda nueva — estructura", category: "Residencial", imageUrl: null, illustrationVariant: "house-frame" },
+      { title: "Remodelación de cocina", category: "Remodelación", imageUrl: null, illustrationVariant: "interior" },
+      { title: "Local comercial", category: "Comercial", imageUrl: null, illustrationVariant: "commercial" },
+      { title: "Remodelación en proceso", category: "Remodelación", imageUrl: null, illustrationVariant: "renovation" },
+      { title: "Planificación de proyecto", category: "Diseño", imageUrl: null, illustrationVariant: "blueprint" },
+      { title: "Obra en construcción", category: "Residencial", imageUrl: null, illustrationVariant: "skyline" },
     ],
   },
   process: {

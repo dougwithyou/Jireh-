@@ -1,4 +1,13 @@
 export type SiteContent = {
+  nav: {
+    inicioLabel: string;
+    serviciosLabel: string;
+    proyectosLabel: string;
+    procesoLabel: string;
+    nosotrosLabel: string;
+    contactoLabel: string;
+    ctaLabel: string;
+  };
   hero: {
     eyebrow: string;
     headlineLine1: string;
@@ -25,20 +34,13 @@ export type SiteContent = {
     eyebrow: string;
     heading: string;
     intro: string;
-    items: [ServiceItem, ServiceItem, ServiceItem, ServiceItem];
+    items: ServiceItem[];
   };
   portfolio: {
     eyebrow: string;
     heading: string;
     intro: string;
-    projects: [
-      PortfolioProject,
-      PortfolioProject,
-      PortfolioProject,
-      PortfolioProject,
-      PortfolioProject,
-      PortfolioProject,
-    ];
+    projects: PortfolioProject[];
   };
   process: {
     eyebrow: string;
@@ -70,7 +72,7 @@ export type SiteContent = {
     eyebrow: string;
     heading: string;
     intro: string;
-    items: [Testimonial, Testimonial, Testimonial];
+    items: Testimonial[];
   };
   bidCta: {
     headlineLine1: string;
@@ -93,11 +95,34 @@ export type SiteContent = {
   };
 };
 
-export type ServiceItem = { title: string; description: string };
+export const SERVICE_ICONS = [
+  "Home",
+  "Hammer",
+  "Building2",
+  "Settings",
+  "Wrench",
+  "Ruler",
+  "ClipboardList",
+  "ShieldCheck",
+] as const;
+export type ServiceIconName = (typeof SERVICE_ICONS)[number];
+
+export const PORTFOLIO_ILLUSTRATIONS = [
+  "house-frame",
+  "interior",
+  "commercial",
+  "renovation",
+  "blueprint",
+  "skyline",
+] as const;
+export type PortfolioIllustration = (typeof PORTFOLIO_ILLUSTRATIONS)[number];
+
+export type ServiceItem = { title: string; description: string; iconName: ServiceIconName };
 export type PortfolioProject = {
   title: string;
   category: "Residencial" | "Remodelación" | "Comercial" | "Diseño";
   imageUrl: string | null;
+  illustrationVariant: PortfolioIllustration;
 };
 export type ProcessPhase = { title: string; duration: string; description: string };
 export type CommitmentPoint = { value: string; label: string };

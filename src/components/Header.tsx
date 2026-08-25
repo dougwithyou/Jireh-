@@ -2,19 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import type { SiteContent } from "@/lib/site-content/types";
 
-const navLinks = [
-  { href: "#inicio", label: "Inicio" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#proyectos", label: "Proyectos" },
-  { href: "#proceso", label: "Proceso" },
-  { href: "#nosotros", label: "Nosotros" },
-  { href: "#contacto", label: "Contacto" },
-];
-
-export default function Header() {
+export default function Header({ content }: { content: SiteContent["nav"] }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#inicio", label: content.inicioLabel },
+    { href: "#servicios", label: content.serviciosLabel },
+    { href: "#proyectos", label: content.proyectosLabel },
+    { href: "#proceso", label: content.procesoLabel },
+    { href: "#nosotros", label: content.nosotrosLabel },
+    { href: "#contacto", label: content.contactoLabel },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -56,7 +57,7 @@ export default function Header() {
           href="#contacto"
           className="hidden bg-amber-400 px-5 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-charcoal-900 transition-colors hover:bg-amber-300 lg:inline-block"
         >
-          Solicitar presupuesto
+          {content.ctaLabel}
         </a>
 
         <button
@@ -88,7 +89,7 @@ export default function Header() {
               onClick={() => setMenuOpen(false)}
               className="mt-2 bg-amber-400 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-charcoal-900 hover:bg-amber-300"
             >
-              Solicitar presupuesto
+              {content.ctaLabel}
             </a>
           </nav>
         </div>
