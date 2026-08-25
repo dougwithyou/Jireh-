@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,9 +8,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const sora = Sora({
-  variable: "--font-sora",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -47,9 +48,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${sora.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivo.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white text-navy-950">
+      <body className="min-h-full flex flex-col bg-white text-charcoal-900">
         {children}
       </body>
     </html>

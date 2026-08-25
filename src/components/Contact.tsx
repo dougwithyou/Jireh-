@@ -7,14 +7,14 @@ export default function Contact() {
       <div className="mx-auto max-w-3xl px-5 sm:px-8">
         <Reveal>
           <div className="text-center">
-            <span className="text-sm font-semibold uppercase tracking-wider text-terracotta-600">
+            <span className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600">
               Contacto
             </span>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-navy-950 sm:text-4xl">
-              Solicita tu presupuesto
+            <h2 className="mt-3 font-display text-3xl font-bold uppercase tracking-[-0.02em] text-charcoal-900 sm:text-4xl">
+              Solicitá tu presupuesto
             </h2>
-            <p className="mt-4 text-lg text-navy-600">
-              Cuéntanos sobre tu proyecto y te contactaremos a la brevedad
+            <p className="mt-4 text-lg text-charcoal-500">
+              Contanos sobre tu proyecto y te contactaremos a la brevedad
               para conversar los detalles.
             </p>
           </div>
