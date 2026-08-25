@@ -1,8 +1,17 @@
-import { Hammer, Home, Building2, Settings } from "lucide-react";
+import { Hammer, Home, Building2, Settings, Wrench, Ruler, ClipboardList, ShieldCheck } from "lucide-react";
 import Reveal from "./Reveal";
-import type { SiteContent } from "@/lib/site-content/types";
+import type { ServiceIconName, SiteContent } from "@/lib/site-content/types";
 
-const icons = [Home, Hammer, Building2, Settings];
+const icons: Record<ServiceIconName, typeof Home> = {
+  Home,
+  Hammer,
+  Building2,
+  Settings,
+  Wrench,
+  Ruler,
+  ClipboardList,
+  ShieldCheck,
+};
 
 export default function Services({ content }: { content: SiteContent["services"] }) {
   return (
@@ -20,7 +29,7 @@ export default function Services({ content }: { content: SiteContent["services"]
 
         <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {content.items.map((service, i) => {
-            const Icon = icons[i] ?? Settings;
+            const Icon = icons[service.iconName] ?? Settings;
             return (
               <Reveal key={i} delayMs={i * 100}>
                 <div className="group h-full border-l-4 border-amber-400 bg-charcoal-850 p-7 transition-[border-width] duration-300 hover:border-l-8">

@@ -18,7 +18,7 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
+      <Header content={content.nav} />
       <main className="flex-1">
         <Hero content={content.hero} />
         <HazardStripe />
@@ -32,7 +32,7 @@ export default async function Home() {
         <BidCTA content={content.bidCta} />
         <Contact content={content.contact} />
       </main>
-      <Footer content={content.footer} />
+      <Footer content={content.footer} nav={content.nav} />
     </>
   );
 }

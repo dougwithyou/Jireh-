@@ -19,17 +19,22 @@ function InstagramIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-const quickLinks = [
-  { href: "#inicio", label: "Inicio" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#proyectos", label: "Proyectos" },
-  { href: "#proceso", label: "Proceso" },
-  { href: "#nosotros", label: "Nosotros" },
-  { href: "#contacto", label: "Contacto" },
-];
-
-export default function Footer({ content }: { content: SiteContent["footer"] }) {
+export default function Footer({
+  content,
+  nav,
+}: {
+  content: SiteContent["footer"];
+  nav: SiteContent["nav"];
+}) {
   const year = new Date().getFullYear();
+  const quickLinks = [
+    { href: "#inicio", label: nav.inicioLabel },
+    { href: "#servicios", label: nav.serviciosLabel },
+    { href: "#proyectos", label: nav.proyectosLabel },
+    { href: "#proceso", label: nav.procesoLabel },
+    { href: "#nosotros", label: nav.nosotrosLabel },
+    { href: "#contacto", label: nav.contactoLabel },
+  ];
   const socialLinks = [
     { icon: FacebookIcon, href: content.facebookUrl, label: "Facebook" },
     { icon: InstagramIcon, href: content.instagramUrl, label: "Instagram" },

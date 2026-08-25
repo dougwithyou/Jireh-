@@ -5,7 +5,12 @@ import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/lib/auth/session";
 import { uploadSiteImage } from "@/lib/site-content/upload";
 import { getSiteContent } from "@/lib/site-content/get";
-import type { SiteContent, SiteContentSection } from "@/lib/site-content/types";
+import type {
+  ServiceIconName,
+  PortfolioIllustration,
+  SiteContent,
+  SiteContentSection,
+} from "@/lib/site-content/types";
 
 export type SiteEditorState = { error?: string; success?: boolean };
 
@@ -109,14 +114,37 @@ export async function updateServices(
   _prev: SiteEditorState,
   formData: FormData
 ): Promise<SiteEditorState> {
+  const count = num(formData, "itemCount");
   return saveSection("services", {
     eyebrow: str(formData, "eyebrow"),
     heading: str(formData, "heading"),
     intro: str(formData, "intro"),
-    items: [0, 1, 2, 3].map((i) => ({
+    items: Array.from({ length: count }, (_, i) => ({
       title: str(formData, `item${i}Title`),
       description: str(formData, `item${i}Description`),
-    })) as SiteContent["services"]["items"],
+      iconName: str(formData, `item${i}Icon`) as ServiceIconName,
+    })),
+  });
+}
+
+export async function addServiceItem() {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("services", {
+    ...current.services,
+    items: [
+      ...current.services.items,
+      { title: "Nuevo servicio", description: "", iconName: "Settings" },
+    ],
+  });
+}
+
+export async function removeServiceItem(index: number) {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("services", {
+    ...current.services,
+    items: current.services.items.filter((_, i) => i !== index),
   });
 }
 
@@ -125,10 +153,18 @@ export async function updatePortfolio(
   formData: FormData
 ): Promise<SiteEditorState> {
   try {
+    const count = num(formData, "projectCount");
     const projects = await Promise.all(
-      [0, 1, 2, 3, 4, 5].map(async (i) => ({
+      Array.from({ length: count }, (_, i) => i).map(async (i) => ({
         title: str(formData, `project${i}Title`),
-        category: str(formData, `project${i}Category`) as SiteContent["portfolio"]["projects"][number]["category"],
+        category: str(
+          formData,
+          `project${i}Category`
+        ) as SiteContent["portfolio"]["projects"][number]["category"],
+        illustrationVariant: str(
+          formData,
+          `project${i}Illustration`
+        ) as PortfolioIllustration,
         imageUrl: await resolveImage(
           formData,
           `project${i}Image`,
@@ -143,11 +179,37 @@ export async function updatePortfolio(
       eyebrow: str(formData, "eyebrow"),
       heading: str(formData, "heading"),
       intro: str(formData, "intro"),
-      projects: projects as SiteContent["portfolio"]["projects"],
+      projects,
     });
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Error al subir una imagen." };
   }
+}
+
+export async function addPortfolioItem() {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("portfolio", {
+    ...current.portfolio,
+    projects: [
+      ...current.portfolio.projects,
+      {
+        title: "Nuevo proyecto",
+        category: "Residencial",
+        imageUrl: null,
+        illustrationVariant: "skyline",
+      },
+    ],
+  });
+}
+
+export async function removePortfolioItem(index: number) {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("portfolio", {
+    ...current.portfolio,
+    projects: current.portfolio.projects.filter((_, i) => i !== index),
+  });
 }
 
 export async function updateProcess(
@@ -220,15 +282,37 @@ export async function updateTestimonials(
   _prev: SiteEditorState,
   formData: FormData
 ): Promise<SiteEditorState> {
+  const count = num(formData, "itemCount");
   return saveSection("testimonials", {
     eyebrow: str(formData, "eyebrow"),
     heading: str(formData, "heading"),
     intro: str(formData, "intro"),
-    items: [0, 1, 2].map((i) => ({
+    items: Array.from({ length: count }, (_, i) => ({
       quote: str(formData, `item${i}Quote`),
       name: str(formData, `item${i}Name`),
       location: str(formData, `item${i}Location`),
-    })) as SiteContent["testimonials"]["items"],
+    })),
+  });
+}
+
+export async function addTestimonialItem() {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("testimonials", {
+    ...current.testimonials,
+    items: [
+      ...current.testimonials.items,
+      { quote: "[Nueva reseña]", name: "[Nombre del cliente]", location: "[Ciudad, Virginia]" },
+    ],
+  });
+}
+
+export async function removeTestimonialItem(index: number) {
+  if (!(await isSuperAdmin())) return;
+  const current = await getSiteContent();
+  return saveSection("testimonials", {
+    ...current.testimonials,
+    items: current.testimonials.items.filter((_, i) => i !== index),
   });
 }
 
@@ -252,6 +336,21 @@ export async function updateContact(
     eyebrow: str(formData, "eyebrow"),
     heading: str(formData, "heading"),
     paragraph: str(formData, "paragraph"),
+  });
+}
+
+export async function updateNav(
+  _prev: SiteEditorState,
+  formData: FormData
+): Promise<SiteEditorState> {
+  return saveSection("nav", {
+    inicioLabel: str(formData, "inicioLabel"),
+    serviciosLabel: str(formData, "serviciosLabel"),
+    proyectosLabel: str(formData, "proyectosLabel"),
+    procesoLabel: str(formData, "procesoLabel"),
+    nosotrosLabel: str(formData, "nosotrosLabel"),
+    contactoLabel: str(formData, "contactoLabel"),
+    ctaLabel: str(formData, "ctaLabel"),
   });
 }
 
