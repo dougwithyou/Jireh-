@@ -10,10 +10,20 @@ Landing de un solo negocio (Jireh Contractor) para validar el pitch inicial
 con el cliente. Next.js + Tailwind, formulario de contacto simulado en
 frontend.
 
-## Fase 2 — Fundaciones multi-tenant
+## Fase 2 — Fundaciones multi-tenant (✅ completa)
 
 **Objetivo**: tener el esqueleto de la plataforma funcionando con datos
 reales, sin IA todavía.
+
+Implementado: Supabase Auth (login por correo/contraseña, sin
+auto-registro), panel de super admin (`/admin`) para dar de alta negocios y
+su primer owner, panel del negocio (`/app`) con listado de clientes y
+constructor de formularios embebibles con snippet `<iframe>` y endpoint
+público de envío (`/f/[embedToken]`, `api/forms/[embedToken]/submit`) que
+crea o actualiza el cliente automáticamente. Pendiente antes de dar de alta
+el primer negocio real: bootstrap del primer super admin (ver
+`docs/plataforma/ARQUITECTURA.md` o pedirlo en el chat) y variables de
+entorno de Supabase en Vercel.
 
 - Aplicar la migración inicial (`supabase/migrations/20260824000000_init_platform_schema.sql`)
   a un proyecto Supabase.
