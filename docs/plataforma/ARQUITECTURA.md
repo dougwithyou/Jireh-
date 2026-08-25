@@ -32,124 +32,65 @@
   delgadas, para poder cambiar de proveedor (transcripción, visión, LLM) sin
   tocar rutas ni componentes.
 
-## Árbol de carpetas propuesto
+## Árbol de carpetas (real, implementado desde la Fase 2)
+
+`src/app/page.tsx` (marketing de Jireh Contractor) ya ocupa la ruta raíz
+`/`, así que el panel del negocio y el super admin viven bajo prefijos
+propios en vez del esquema original de route groups sin prefijo — evita el
+conflicto y es el patrón típico de un SaaS (marketing en `/`, producto en
+`/app`).
+
+También: esta versión de Next.js **deprecó `middleware.ts` en favor de
+`proxy.ts`** (mismo comportamiento, archivo y función renombrados). Todo el
+código nuevo usa `proxy.ts`.
 
 ```
 src/
   app/
-    (marketing)/                    # sitio público de la plataforma (landing, precios)
-      page.tsx
-      layout.tsx
+    page.tsx                        # marketing de Jireh Contractor (Fase 1, sin tocar)
+    login/page.tsx                  # login (correo + contraseña, sin auto-registro)
 
-    (super-admin)/
-      admin/
-        layout.tsx                  # guard: requiere is_super_admin()
-        page.tsx                    # dashboard de super admin
-        businesses/
-          page.tsx                  # listado de negocios
-          new/page.tsx              # alta manual de negocio + carga de docs de referencia
-          [businessId]/
-            page.tsx                # detalle: config, uso de IA, créditos, docs de referencia
-            usage/page.tsx          # costos y consumo de IA por cuenta
+    admin/                          # super admin, requiere is_super_admin()
+      layout.tsx                    # guard + nav
+      page.tsx                      # listado de negocios
+      businesses/
+        actions.ts                  # 'use server' createBusiness (crea negocio + owner + membership)
+        new/page.tsx                # alta manual de negocio
 
-    (dashboard)/                    # panel del negocio (dueño/staff), requiere sesión + business_members
-      layout.tsx                    # resuelve business_id activo, sidebar del CRM
-      page.tsx                      # Dashboard principal (ingresos, embudo, accesos directos)
+    app/                            # panel del negocio (dueño/staff), requiere business_members
+      layout.tsx                    # guard + resuelve el negocio activo (1 negocio por usuario en Fase 2)
+      page.tsx                      # inicio (conteos; ingresos/embudo llegan en Fase 6)
       clients/
-        page.tsx                    # listado + búsqueda de clientes
-        [clientId]/page.tsx         # ficha de cliente: historial, mensajes, docs, pagos
-      conversations/
-        page.tsx                    # bandeja de conversaciones (whatsapp + interno)
-        [conversationId]/page.tsx   # hilo + chat de IA
-      quotes/
-        page.tsx
-        [quoteId]/page.tsx          # editor/preview interno del presupuesto
-      contracts/
-        page.tsx
-        [contractId]/page.tsx
-      invoices/
-        page.tsx
+        page.tsx                    # listado de clientes
+        [clientId]/page.tsx         # ficha: datos + envíos de formulario
       forms/
-        page.tsx                    # constructor de formularios
-        [formId]/edit/page.tsx
-      email-marketing/
-        templates/page.tsx
-        segments/page.tsx
-        sequences/page.tsx
-        sequences/[sequenceId]/page.tsx
-      settings/
-        whatsapp/page.tsx           # conexión de WhatsApp Business
-        billing/page.tsx            # plan/suscripción de la plataforma
-        team/page.tsx               # invitar staff
+        actions.ts                  # 'use server' createForm/addField/deleteField/toggleFormActive
+        page.tsx                    # listado + alta de formularios
+        [formId]/page.tsx           # preguntas del formulario + snippet embebible
 
-    (portal)/                       # páginas públicas de link único, sin auth de Supabase
-      q/[token]/page.tsx            # ver presupuesto, aprobar/ajustar, descargar PDF
-      c/[token]/page.tsx            # leer y firmar contrato -> desbloquea factura -> pago Stripe
-      f/[embedToken]/page.tsx       # formulario embebible (para <iframe>) 
+    f/[embedToken]/                 # página pública del formulario (para <iframe>), sin auth
+      page.tsx                      # Server Component: valida token con service_role
+      embed-form.tsx                # Client Component: captura respuestas y hace POST
 
     api/
-      webhooks/
-        whatsapp/route.ts           # verificación + recepción de mensajes de WhatsApp Cloud API
-        stripe/route.ts             # eventos de pago/suscripción
-        resend/route.ts             # eventos de entrega/apertura/click de email
-      ai/
-        quote/route.ts              # generación de presupuesto (texto/voz/foto -> IA)
-        chat/route.ts               # turno de chat interno o desde WhatsApp
-        contract/route.ts           # generación de contrato a partir del presupuesto aprobado
-      forms/
-        [embedToken]/submit/route.ts
-      portal/
-        quotes/[token]/route.ts     # acciones del cliente: aprobar / pedir ajuste
-        contracts/[token]/sign/route.ts
-        invoices/[token]/pay/route.ts
-      cron/
-        email-sequences/route.ts    # despacho de pasos de secuencias vencidas
-
-  components/
-    admin/                          # UI exclusiva del panel de super admin
-    dashboard/                      # UI del CRM (sidebar, tablas, cards de embudo)
-    portal/                         # UI de las páginas públicas de link único
-    forms/                          # renderer de formularios (constructor + embebido)
-    chat/                           # burbujas de chat, input multimodal (texto/audio/foto)
-    shared/                         # botones, layout, primitives compartidos
+      forms/[embedToken]/submit/route.ts   # crea/actualiza cliente + guarda el envío
 
   lib/
     supabase/
-      server.ts                     # cliente server (RLS, cookies de sesión)
-      admin.ts                      # cliente con service_role (solo en Route Handlers)
-      middleware.ts
-    ai/
-      provider.ts                   # interfaz LLM (texto + visión)
-      transcription.ts              # interfaz Whisper-like
-      guardrails.ts                 # límites de dominio/anti-jailbreak por negocio
-      prompts/
-        quote.ts
-        contract.ts
-        chat.ts
-    whatsapp/
-      client.ts                     # envío de mensajes vía Cloud API
-      webhook-verify.ts
-    stripe/
-      client.ts
-      checkout.ts                   # invoice -> payment intent / checkout session
-    resend/
-      client.ts
-      sequences.ts                  # motor de envío de secuencias
-    pdf/
-      render-quote.ts
-      render-contract.ts
-    credits/
-      ledger.ts                     # débito/crédito de créditos de IA + registro en ai_usage_logs
-    audit/
-      log.ts                        # helper para insertar en audit_logs
-    tokens.ts                       # generación/validación de tokens de link único
+      browser.ts                    # cliente para Client Components
+      server.ts                     # cliente para Server Components/Actions (cookies, RLS)
+      admin.ts                      # cliente service_role — solo en código server, nunca al cliente
+    auth/
+      session.ts                    # getCurrentUser / isSuperAdmin / getActiveBusinessMembership
+      actions.ts                    # 'use server' signOut
 
   types/
-    database.ts                    # tipos generados desde Supabase (mcp__Supabase__generate_typescript_types)
-    domain.ts                      # tipos de dominio (Quote, Contract, Invoice, ...)
+    database.ts                     # tipos generados desde Supabase (mcp__Supabase__generate_typescript_types)
+
+  proxy.ts                          # refresca la cookie de sesión de Supabase en cada request
 
 supabase/
-  migrations/                      # migraciones SQL versionadas (fuente de verdad del esquema)
+  migrations/                       # migraciones SQL versionadas (fuente de verdad del esquema)
 
 docs/
   plataforma/
@@ -157,6 +98,18 @@ docs/
     ESQUEMA_BASE_DE_DATOS.md
     PLAN_DE_DESARROLLO.md
 ```
+
+### Pendiente para fases siguientes
+
+El árbol de arriba es lo ya construido (Fase 2: fundaciones multi-tenant +
+formularios embebibles). Las fases 3-6 agregan, sin romper lo anterior:
+
+- `app/app/conversations/` (WhatsApp + chat interno), `api/webhooks/whatsapp/`
+- `app/app/quotes/`, `app/app/contracts/`, `app/app/invoices/`
+- `app/q/[token]/`, `app/c/[token]/` (páginas públicas de presupuesto/contrato/factura)
+- `app/app/email-marketing/`
+- `lib/ai/`, `lib/whatsapp/`, `lib/stripe/`, `lib/resend/`, `lib/pdf/`, `lib/credits/`, `lib/audit/`
+- `api/webhooks/stripe/`, `api/webhooks/resend/`, `api/ai/*`, `api/cron/email-sequences/`
 
 ## Notas sobre el sitio actual (Jireh Contractor)
 
