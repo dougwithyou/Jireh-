@@ -7,6 +7,7 @@ const navLinks = [
   { href: "#inicio", label: "Inicio" },
   { href: "#servicios", label: "Servicios" },
   { href: "#proyectos", label: "Proyectos" },
+  { href: "#proceso", label: "Proceso" },
   { href: "#nosotros", label: "Nosotros" },
   { href: "#contacto", label: "Contacto" },
 ];
@@ -16,7 +17,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -24,24 +25,27 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full transition-colors duration-300 ${
-        scrolled ? "bg-navy-950/95 shadow-lg backdrop-blur" : "bg-transparent"
+      className={`fixed top-0 z-50 w-full border-b-[3px] bg-charcoal-900/95 backdrop-blur transition-[border-color] duration-400 ${
+        scrolled ? "border-amber-400" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-        <a
-          href="#inicio"
-          className="font-heading text-xl font-bold tracking-tight text-white"
-        >
-          Jireh <span className="text-terracotta-400">Contractor</span>
+      <div className="mx-auto flex h-[78px] max-w-[1320px] items-center justify-between px-5 sm:px-8 lg:px-16">
+        <a href="#inicio" className="flex items-center gap-2.5">
+          <span className="font-display text-lg font-extrabold tracking-[-0.02em] text-white">
+            JIREH
+          </span>
+          <span className="h-1.5 w-1.5 bg-amber-400" aria-hidden />
+          <span className="font-sans text-[9px] font-medium tracking-[0.25em] text-charcoal-300">
+            CONTRACTOR
+          </span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-navy-100 transition-colors hover:text-terracotta-300"
+              className="font-sans text-sm font-medium text-charcoal-200 transition-colors hover:text-amber-400"
             >
               {link.label}
             </a>
@@ -50,7 +54,7 @@ export default function Header() {
 
         <a
           href="#contacto"
-          className="hidden rounded-full bg-terracotta-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-terracotta-600 md:inline-block"
+          className="hidden bg-amber-400 px-5 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-charcoal-900 transition-colors hover:bg-amber-300 lg:inline-block"
         >
           Solicitar presupuesto
         </a>
@@ -58,7 +62,7 @@ export default function Header() {
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
-          className="text-white md:hidden"
+          className="text-white lg:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
         >
@@ -67,14 +71,14 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-navy-800 bg-navy-950 px-5 pb-6 pt-2 md:hidden">
+        <div className="border-t border-charcoal-700 bg-charcoal-900 px-5 pb-6 pt-2 lg:hidden">
           <nav className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-medium text-navy-100 hover:bg-navy-900 hover:text-terracotta-300"
+                className="px-3 py-3 font-display text-xl uppercase tracking-tight text-charcoal-100 hover:text-amber-400"
               >
                 {link.label}
               </a>
@@ -82,7 +86,7 @@ export default function Header() {
             <a
               href="#contacto"
               onClick={() => setMenuOpen(false)}
-              className="mt-2 rounded-full bg-terracotta-500 px-5 py-3 text-center text-base font-semibold text-white hover:bg-terracotta-600"
+              className="mt-2 bg-amber-400 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-charcoal-900 hover:bg-amber-300"
             >
               Solicitar presupuesto
             </a>

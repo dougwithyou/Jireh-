@@ -1,10 +1,14 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import ConstructionArt, {
   ConstructionVariant,
 } from "./illustrations/ConstructionArt";
 import Reveal from "./Reveal";
 
 /**
- * PORTAFOLIO — imágenes referenciales
+ * PROYECTOS — imágenes referenciales
  * -----------------------------------
  * Las tarjetas de abajo usan ilustraciones vectoriales como marcador de
  * posición mientras se recopilan las fotos reales de los proyectos de Jireh
@@ -14,10 +18,12 @@ import Reveal from "./Reveal";
  *   2. Mantener el mismo `aspect-[4/3]` en el contenedor para conservar el
  *      grid uniforme.
  */
+const categories = ["Todos", "Residencial", "Remodelación", "Comercial", "Diseño"] as const;
+
 const projects: {
   variant: ConstructionVariant;
   title: string;
-  category: string;
+  category: (typeof categories)[number];
 }[] = [
   { variant: "house-frame", title: "Vivienda nueva — estructura", category: "Residencial" },
   { variant: "interior", title: "Remodelación de cocina", category: "Remodelación" },
@@ -28,45 +34,86 @@ const projects: {
 ];
 
 export default function Portfolio() {
+  const [filter, setFilter] = useState<(typeof categories)[number]>("Todos");
+
+  const filtered = useMemo(
+    () =>
+      filter === "Todos"
+        ? projects
+        : projects.filter((p) => p.category === filter),
+    [filter]
+  );
+
   return (
-    <section id="proyectos" className="scroll-mt-20 bg-white py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+    <section id="proyectos" className="scroll-mt-20 bg-concrete-100 py-24">
+      <div className="mx-auto max-w-[1320px] px-5 sm:px-8 lg:px-16">
         <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="text-sm font-semibold uppercase tracking-wider text-terracotta-600">
-              Proyectos
-            </span>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-navy-950 sm:text-4xl">
-              Un vistazo a nuestro trabajo
-            </h2>
-            <p className="mt-4 text-lg text-navy-600">
-              Imágenes referenciales — próximamente reemplazadas por
-              fotografías reales de nuestros proyectos.
-            </p>
-          </div>
+          <span className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600">
+            Trabajo seleccionado
+          </span>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold uppercase tracking-[-0.02em] text-charcoal-900 sm:text-4xl">
+            Proyectos
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg text-charcoal-500">
+            Imágenes referenciales — próximamente reemplazadas por
+            fotografías reales de nuestros proyectos.
+          </p>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => (
-            <Reveal key={project.title} delayMs={(i % 3) * 100}>
-              <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-navy-900">
-                <ConstructionArt
-                  variant={project.variant}
-                  id={`portfolio-${i}`}
-                  className="h-full w-full transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/10 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-terracotta-300">
-                    {project.category}
-                  </span>
-                  <p className="mt-1 font-heading text-lg font-semibold text-white">
-                    {project.title}
-                  </p>
-                </div>
-              </div>
-            </Reveal>
+        <div className="mt-10 flex gap-2 overflow-x-auto pb-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setFilter(cat)}
+              className={`shrink-0 px-4 py-2 font-display text-xs font-semibold uppercase tracking-wide transition-colors ${
+                filter === cat
+                  ? "bg-amber-400 text-charcoal-900"
+                  : "bg-transparent text-charcoal-500 hover:text-charcoal-900"
+              }`}
+            >
+              {cat}
+            </button>
           ))}
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((project, i) => (
+              <motion.div
+                key={project.title}
+                layout
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.35 }}
+                className={i === 0 ? "sm:col-span-2 lg:col-span-2" : ""}
+              >
+                <div className="group relative aspect-[4/3] overflow-hidden bg-charcoal-900">
+                  <ConstructionArt
+                    variant={project.variant}
+                    id={`portfolio-${project.title}`}
+                    className="h-full w-full transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(19,20,22,0.9) 0%, transparent 55%)",
+                    }}
+                  />
+                  <div className="absolute inset-x-0 bottom-0 translate-y-2 p-6 transition-transform duration-400 group-hover:translate-y-0">
+                    <span className="font-display text-[11px] uppercase tracking-[0.2em] text-amber-300">
+                      {project.category}
+                    </span>
+                    <h3 className="mt-2 font-display text-xl font-semibold uppercase text-white">
+                      {project.title}
+                    </h3>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>

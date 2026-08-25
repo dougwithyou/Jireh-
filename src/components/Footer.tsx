@@ -22,6 +22,7 @@ const quickLinks = [
   { href: "#inicio", label: "Inicio" },
   { href: "#servicios", label: "Servicios" },
   { href: "#proyectos", label: "Proyectos" },
+  { href: "#proceso", label: "Proceso" },
   { href: "#nosotros", label: "Nosotros" },
   { href: "#contacto", label: "Contacto" },
 ];
@@ -36,21 +37,21 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy-950 text-navy-200">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+    <footer className="border-t-[3px] border-amber-400 bg-charcoal-950 text-charcoal-300">
+      <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-heading text-xl font-bold text-white">
-              Jireh <span className="text-terracotta-400">Contractor</span>
+            <p className="font-display text-xl font-extrabold text-white">
+              JIREH <span className="text-amber-400">CONTRACTOR</span>
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-navy-400">
+            <p className="mt-4 text-sm leading-relaxed text-charcoal-400">
               20 años de experiencia en construcción y remodelación,
               sirviendo con confianza a clientes en toda Virginia.
             </p>
           </div>
 
           <div>
-            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
               Enlaces rápidos
             </h3>
             <ul className="mt-4 space-y-2.5">
@@ -58,7 +59,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-sm text-navy-400 transition-colors hover:text-terracotta-300"
+                    className="text-sm text-charcoal-400 transition-colors hover:text-amber-400"
                   >
                     {link.label}
                   </a>
@@ -68,27 +69,27 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
               Contacto
             </h3>
-            <ul className="mt-4 space-y-3 text-sm text-navy-400">
+            <ul className="mt-4 space-y-3 text-sm text-charcoal-400">
               <li className="flex items-center gap-2.5">
-                <Phone size={16} className="shrink-0 text-terracotta-400" />
+                <Phone size={16} className="shrink-0 text-amber-400" />
                 <span>(000) 000-0000</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail size={16} className="shrink-0 text-terracotta-400" />
+                <Mail size={16} className="shrink-0 text-amber-400" />
                 <span>info@jirehcontractor.com</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <MapPin size={16} className="shrink-0 text-terracotta-400" />
+                <MapPin size={16} className="shrink-0 text-amber-400" />
                 <span>Virginia, EE. UU.</span>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
               Síguenos
             </h3>
             <div className="mt-4 flex gap-3">
@@ -97,7 +98,7 @@ export default function Footer() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-900 text-navy-300 transition-colors hover:bg-terracotta-500 hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center bg-charcoal-800 text-charcoal-300 transition-colors hover:bg-amber-400 hover:text-charcoal-900"
                 >
                   <social.icon width={18} height={18} />
                 </a>
@@ -106,7 +107,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-navy-800 pt-6 text-center text-xs text-navy-500">
+        <div className="mt-12 border-t border-charcoal-800 pt-6 text-center text-xs text-charcoal-500">
           © {year} Jireh Contractor. Todos los derechos reservados.
         </div>
       </div>

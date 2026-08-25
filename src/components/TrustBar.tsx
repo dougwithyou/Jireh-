@@ -1,20 +1,20 @@
 import { Award, Building2, HardHat, MapPin } from "lucide-react";
-import Reveal from "./Reveal";
+import CountUp from "./CountUp";
 
 const stats = [
   {
     icon: Award,
-    value: "20+",
+    value: <CountUp value={20} suffix="+" />,
     label: "Años de experiencia",
   },
   {
     icon: HardHat,
-    value: "150+",
+    value: <CountUp value={150} suffix="+" />,
     label: "Proyectos completados",
   },
   {
     icon: Building2,
-    value: "3",
+    value: <CountUp value={3} />,
     label: "Residencial, remodelación y comercial",
   },
   {
@@ -26,21 +26,20 @@ const stats = [
 
 export default function TrustBar() {
   return (
-    <section className="border-b border-navy-100 bg-white">
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4">
-          {stats.map((stat, i) => (
-            <Reveal key={stat.label} delayMs={i * 100}>
-              <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-                <stat.icon className="mb-3 text-terracotta-500" size={30} strokeWidth={1.6} />
-                <p className="font-heading text-3xl font-bold text-navy-900 sm:text-4xl">
-                  {stat.value}
-                </p>
-                <p className="mt-1 text-sm text-navy-600 sm:text-base">{stat.label}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+    <section className="bg-charcoal-850">
+      <div className="mx-auto grid max-w-[1320px] grid-cols-2 divide-x divide-y divide-charcoal-700 border-charcoal-700 sm:divide-y-0 lg:grid-cols-4">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="flex flex-col items-start gap-3 border-charcoal-700 px-6 py-10 sm:px-8 lg:py-14"
+          >
+            <stat.icon className="text-amber-400" size={26} strokeWidth={1.6} />
+            <p className="font-display text-4xl font-extrabold text-white">
+              {stat.value}
+            </p>
+            <p className="text-sm text-charcoal-300">{stat.label}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -95,12 +95,12 @@ export default function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="flex flex-col items-center rounded-2xl border border-navy-100 bg-white p-10 text-center shadow-sm">
-        <CheckCircle2 className="mb-4 text-terracotta-500" size={48} strokeWidth={1.5} />
-        <h3 className="font-heading text-xl font-semibold text-navy-950">
+      <div className="flex flex-col items-center border border-charcoal-200 bg-white p-10 text-center">
+        <CheckCircle2 className="mb-4 text-amber-500" size={48} strokeWidth={1.5} />
+        <h3 className="font-display text-xl font-semibold text-charcoal-900">
           ¡Solicitud enviada!
         </h3>
-        <p className="mt-2 max-w-sm text-navy-600">
+        <p className="mt-2 max-w-sm text-charcoal-500">
           Gracias por contactar a Jireh Contractor. El equipo de Nicolás
           revisará tu solicitud y se pondrá en contacto contigo pronto.
         </p>
@@ -110,7 +110,7 @@ export default function ContactForm() {
             setForm(initialState);
             setStatus("idle");
           }}
-          className="mt-6 text-sm font-semibold text-navy-700 underline underline-offset-4 hover:text-terracotta-600"
+          className="mt-6 text-sm font-semibold text-charcoal-700 underline underline-offset-4 hover:text-amber-600"
         >
           Enviar otra solicitud
         </button>
@@ -122,7 +122,7 @@ export default function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-2xl border border-navy-100 bg-white p-6 shadow-sm sm:p-8"
+      className="border border-charcoal-200 bg-white p-6 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Nombre completo" error={errors.name}>
@@ -194,7 +194,7 @@ export default function ContactForm() {
         </Field>
       </div>
 
-      <p className="mt-6 text-sm text-navy-500">
+      <p className="mt-6 text-sm text-charcoal-400">
         Al enviar este formulario, el equipo de Jireh Contractor se pondrá en
         contacto contigo pronto.
       </p>
@@ -202,7 +202,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-terracotta-500 px-7 py-4 text-base font-semibold text-white transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 bg-amber-400 px-7 py-4 font-display text-base font-bold uppercase tracking-wide text-charcoal-900 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
       >
         {status === "submitting" ? (
           <>
@@ -221,8 +221,8 @@ export default function ContactForm() {
 }
 
 function inputClass(hasError: boolean) {
-  return `w-full rounded-lg border bg-white px-4 py-3 text-navy-950 placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-terracotta-400 ${
-    hasError ? "border-red-400" : "border-navy-200"
+  return `w-full border bg-white px-4 py-3 text-charcoal-900 placeholder:text-charcoal-400 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+    hasError ? "border-red-400" : "border-charcoal-200"
   }`;
 }
 
@@ -239,7 +239,7 @@ function Field({
 }) {
   return (
     <label className={`block ${className}`}>
-      <span className="mb-1.5 block text-sm font-medium text-navy-800">{label}</span>
+      <span className="mb-1.5 block text-sm font-medium text-charcoal-700">{label}</span>
       {children}
       {error && <span className="mt-1.5 block text-sm text-red-500">{error}</span>}
     </label>

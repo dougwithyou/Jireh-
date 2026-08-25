@@ -1,65 +1,89 @@
+"use client";
+
+import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import ConstructionArt from "./illustrations/ConstructionArt";
+
+const headlineLines = ["CONSTRUIMOS PARA", "QUE DURE."];
 
 export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen items-center overflow-hidden bg-navy-950 pt-24"
+      className="relative flex h-screen min-h-[640px] items-end overflow-hidden bg-charcoal-900"
     >
       {/*
         Imagen de fondo referencial. Reemplazar por fotografía real de un
-        proyecto insignia de Jireh Contractor (idealmente una obra terminada
-        o en construcción avanzada, orientación horizontal, alta resolución).
+        proyecto insignia de Jireh Contractor: obra activa al atardecer o
+        estructura terminada, horizontal, alta resolución.
       */}
       <ConstructionArt
         variant="skyline"
         id="hero"
         className="absolute inset-0 h-full w-full"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-navy-950/40" />
-      <div className="absolute inset-0 bg-navy-950/30" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(19,20,22,0.97) 0%, rgba(19,20,22,0.55) 50%, rgba(19,20,22,0.35) 100%)",
+        }}
+      />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-20 sm:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-[1320px] px-5 pb-16 sm:px-8 lg:px-16 lg:pb-20">
         <div className="max-w-2xl">
-          <span className="inline-flex items-center rounded-full border border-terracotta-400/40 bg-terracotta-500/10 px-4 py-1.5 text-sm font-medium text-terracotta-300">
-            20+ años construyendo en Virginia
+          <span className="inline-flex items-center gap-2 font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-400">
+            Virginia, EE. UU. · Construcción y remodelación · 20+ años
           </span>
 
-          <h1 className="mt-6 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-            20 años construyendo con confianza en Virginia
+          <h1 className="mt-6 font-display text-[clamp(2.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.96] tracking-[-0.02em] text-white">
+            {headlineLines.map((line, i) => (
+              <span key={line} className="block overflow-hidden">
+                <motion.span
+                  className="block"
+                  initial={{ clipPath: "inset(0 0 100% 0)" }}
+                  animate={{ clipPath: "inset(0 0 0% 0)" }}
+                  transition={{ duration: 0.85, delay: i * 0.1, ease: "easeOut" }}
+                >
+                  {line}
+                </motion.span>
+              </span>
+            ))}
           </h1>
 
-          <p className="mt-6 text-lg leading-relaxed text-navy-100 sm:text-xl">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="mt-6 max-w-xl text-lg leading-relaxed text-charcoal-100 sm:text-xl"
+          >
             Construcción de vivienda desde cero, remodelaciones residenciales
             y proyectos comerciales, con la solidez de dos décadas de
             experiencia liderados por Nicolás y su equipo.
-          </p>
+          </motion.p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.65 }}
+            className="mt-10 flex flex-col gap-4 sm:flex-row"
+          >
             <a
               href="#contacto"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-terracotta-500 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-terracotta-900/30 transition-colors hover:bg-terracotta-600"
+              className="inline-flex items-center justify-center gap-2 bg-amber-400 px-7 py-4 font-display text-base font-bold uppercase tracking-wide text-charcoal-900 transition-colors hover:bg-amber-300"
             >
               Solicitar presupuesto
               <ArrowRight size={20} />
             </a>
             <a
               href="#proyectos"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
+              className="inline-flex items-center justify-center gap-2 border border-white/30 px-7 py-4 font-display text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
             >
               Ver proyectos
             </a>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
-
-/*
-  Variaciones de copy sugeridas para el título principal (a elección del cliente):
-  1. "20 años construyendo con confianza en Virginia"
-  2. "Dos décadas construyendo los proyectos en los que Virginia confía"
-  3. "Construcción sólida, resultados que duran 20 años"
-*/
