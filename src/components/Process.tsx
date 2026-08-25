@@ -3,53 +3,9 @@
 import { useRef } from "react";
 import { motion, useInView, useScroll } from "motion/react";
 import Reveal from "./Reveal";
+import type { SiteContent } from "@/lib/site-content/types";
 
-const phases = [
-  {
-    number: "01",
-    title: "Consulta inicial",
-    duration: "Primer contacto",
-    description:
-      "Visitamos el sitio o revisamos tus planos y conversamos sobre alcance, ideas y presupuesto aproximado.",
-  },
-  {
-    number: "02",
-    title: "Presupuesto",
-    duration: "Antes de iniciar",
-    description:
-      "Preparamos un presupuesto detallado y por escrito, para que sepas exactamente qué estás contratando.",
-  },
-  {
-    number: "03",
-    title: "Planificación",
-    duration: "Antes de iniciar",
-    description:
-      "Coordinamos permisos, materiales y cronograma antes de mover una sola pala en el sitio.",
-  },
-  {
-    number: "04",
-    title: "Construcción",
-    duration: "Según alcance del proyecto",
-    description:
-      "Nuestro equipo ejecuta el trabajo con supervisión constante y comunicación frecuente sobre el avance.",
-  },
-  {
-    number: "05",
-    title: "Control de calidad",
-    duration: "En cada etapa",
-    description:
-      "Revisamos el trabajo antes de avanzar a la siguiente etapa, para que el resultado cumpla lo acordado.",
-  },
-  {
-    number: "06",
-    title: "Entrega y garantía",
-    duration: "Etapa final",
-    description:
-      "Hacemos un recorrido final junto a vos y respaldamos el trabajo realizado.",
-  },
-];
-
-export default function Process() {
+export default function Process({ content }: { content: SiteContent["process"] }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -61,10 +17,10 @@ export default function Process() {
       <div className="mx-auto max-w-[1320px] px-5 sm:px-8 lg:px-16">
         <Reveal>
           <span className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600">
-            Cómo trabajamos
+            {content.eyebrow}
           </span>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold uppercase tracking-[-0.02em] text-charcoal-900 sm:text-4xl">
-            De la consulta a la entrega
+            {content.heading}
           </h2>
         </Reveal>
 
@@ -76,8 +32,8 @@ export default function Process() {
           />
 
           <div className="space-y-12">
-            {phases.map((phase) => (
-              <PhaseNode key={phase.number} phase={phase} />
+            {content.phases.map((phase, i) => (
+              <PhaseNode key={i} number={i + 1} phase={phase} />
             ))}
           </div>
         </div>
@@ -86,7 +42,13 @@ export default function Process() {
   );
 }
 
-function PhaseNode({ phase }: { phase: (typeof phases)[number] }) {
+function PhaseNode({
+  number,
+  phase,
+}: {
+  number: number;
+  phase: SiteContent["process"]["phases"][number];
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -99,7 +61,7 @@ function PhaseNode({ phase }: { phase: (typeof phases)[number] }) {
       className="relative -ml-14 pl-14 sm:-ml-16 sm:pl-16"
     >
       <span className="absolute left-0 top-0 flex h-9 w-9 items-center justify-center bg-amber-400 font-display text-xs font-bold text-charcoal-900 sm:h-11 sm:w-11">
-        {phase.number}
+        {String(number).padStart(2, "0")}
       </span>
       <h3 className="font-display text-lg font-bold uppercase text-charcoal-900 sm:text-xl">
         {phase.title}

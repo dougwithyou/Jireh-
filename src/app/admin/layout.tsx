@@ -21,6 +21,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             <Link href="/admin" className="hover:text-neutral-900">
               Negocios
             </Link>
+            <Link href="/admin/site" className="hover:text-neutral-900">
+              Sitio web
+            </Link>
             <span className="text-neutral-300">|</span>
             <span>{user.email}</span>
             <form action={signOut}>

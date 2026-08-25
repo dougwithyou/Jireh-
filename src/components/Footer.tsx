@@ -1,4 +1,5 @@
 import { Mail, MapPin, Phone } from "lucide-react";
+import type { SiteContent } from "@/lib/site-content/types";
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -27,14 +28,12 @@ const quickLinks = [
   { href: "#contacto", label: "Contacto" },
 ];
 
-// Placeholders — reemplazar por los enlaces reales de redes sociales del cliente.
-const socialLinks = [
-  { icon: FacebookIcon, href: "#", label: "Facebook" },
-  { icon: InstagramIcon, href: "#", label: "Instagram" },
-];
-
-export default function Footer() {
+export default function Footer({ content }: { content: SiteContent["footer"] }) {
   const year = new Date().getFullYear();
+  const socialLinks = [
+    { icon: FacebookIcon, href: content.facebookUrl, label: "Facebook" },
+    { icon: InstagramIcon, href: content.instagramUrl, label: "Instagram" },
+  ];
 
   return (
     <footer className="border-t-[3px] border-amber-400 bg-charcoal-950 text-charcoal-300">
@@ -45,8 +44,7 @@ export default function Footer() {
               JIREH <span className="text-amber-400">CONTRACTOR</span>
             </p>
             <p className="mt-4 text-sm leading-relaxed text-charcoal-400">
-              20 años de experiencia en construcción y remodelación,
-              sirviendo con confianza a clientes en toda Virginia.
+              {content.description}
             </p>
           </div>
 
@@ -75,15 +73,15 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-charcoal-400">
               <li className="flex items-center gap-2.5">
                 <Phone size={16} className="shrink-0 text-amber-400" />
-                <span>(000) 000-0000</span>
+                <span>{content.phone}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail size={16} className="shrink-0 text-amber-400" />
-                <span>info@jirehcontractor.com</span>
+                <span>{content.email}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <MapPin size={16} className="shrink-0 text-amber-400" />
-                <span>Virginia, EE. UU.</span>
+                <span>{content.address}</span>
               </li>
             </ul>
           </div>
