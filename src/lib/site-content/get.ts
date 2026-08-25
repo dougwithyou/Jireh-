@@ -5,17 +5,27 @@ import type { SiteContent } from "./types";
 const SITE_ID = "jireh-contractor";
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("site_content")
-    .select("content")
-    .eq("id", SITE_ID)
-    .maybeSingle();
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // Sin estas variables el sitio todavía debe poder renderizar con el
+    // copy por defecto en vez de tirar un error no capturado en "/".
+    return defaultSiteContent;
+  }
 
-  if (!data?.content) return defaultSiteContent;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("site_content")
+      .select("content")
+      .eq("id", SITE_ID)
+      .maybeSingle();
 
-  // La fila siempre se escribe completa desde el editor (ver actions.ts),
-  // así que un objeto parcial solo puede venir de una migración vieja;
-  // el spread cubre esa fila con los valores por defecto.
-  return { ...defaultSiteContent, ...(data.content as Partial<SiteContent>) };
+    if (!data?.content) return defaultSiteContent;
+
+    // La fila siempre se escribe completa desde el editor (ver actions.ts),
+    // así que un objeto parcial solo puede venir de una migración vieja;
+    // el spread cubre esa fila con los valores por defecto.
+    return { ...defaultSiteContent, ...(data.content as Partial<SiteContent>) };
+  } catch {
+    return defaultSiteContent;
+  }
 }
