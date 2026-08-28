@@ -354,6 +354,15 @@ export async function updateNav(
   });
 }
 
+export async function updateNotifications(
+  _prev: SiteEditorState,
+  formData: FormData
+): Promise<SiteEditorState> {
+  return saveSection("notifications", {
+    notificationEmail: str(formData, "notificationEmail"),
+  });
+}
+
 export async function updateFooter(
   _prev: SiteEditorState,
   formData: FormData

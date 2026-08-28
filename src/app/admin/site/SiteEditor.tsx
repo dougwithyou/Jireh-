@@ -16,6 +16,7 @@ import {
   updateFooter,
   updateHero,
   updateNav,
+  updateNotifications,
   updatePortfolio,
   updateProcess,
   updateServices,
@@ -44,6 +45,7 @@ export function SiteEditor({ content }: { content: SiteContent }) {
       />
       <BidCtaSection content={content.bidCta} />
       <ContactSection content={content.contact} />
+      <NotificationsSection content={content.notifications} />
       <FooterSection content={content.footer} />
     </div>
   );
@@ -525,6 +527,26 @@ function TestimonialsSection({ content }: { content: SiteContent["testimonials"]
           </div>
         ))}
         <AddItemButton label="+ Agregar testimonio" formAction={addTestimonialItem} />
+      </SectionCard>
+    </form>
+  );
+}
+
+function NotificationsSection({ content }: { content: SiteContent["notifications"] }) {
+  const [state, action, pending] = useActionState(updateNotifications, initialState);
+  return (
+    <form action={action}>
+      <SectionCard
+        title="Notificaciones"
+        description="A este correo llega un aviso cada vez que alguien completa el formulario de contacto. Mientras no haya un dominio verificado en Resend, solo va a recibir el correo de la cuenta de Resend usada para enviar — cualquier otro destinatario no recibirá el mail aunque quede guardado acá."
+        state={state}
+        pending={pending}
+      >
+        <Field
+          label="Correo que recibe cada lead"
+          name="notificationEmail"
+          defaultValue={content.notificationEmail}
+        />
       </SectionCard>
     </form>
   );
