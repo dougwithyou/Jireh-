@@ -93,6 +93,9 @@ export type SiteContent = {
     facebookUrl: string;
     instagramUrl: string;
   };
+  notifications: {
+    notificationEmail: string;
+  };
 };
 
 export const SERVICE_ICONS = [

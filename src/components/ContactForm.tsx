@@ -63,7 +63,7 @@ function validate(form: FormState): Errors {
 export default function ContactForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
 
   function handleChange(
     field: keyof FormState
@@ -74,7 +74,7 @@ export default function ContactForm() {
     };
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const validationErrors = validate(form);
     setErrors(validationErrors);
@@ -82,15 +82,17 @@ export default function ContactForm() {
 
     setStatus("submitting");
 
-    /*
-     * FASE 2 (pendiente): al enviar el formulario, este bloque llamará a un
-     * endpoint del backend que notificará automáticamente al WhatsApp de
-     * Nicolás con los datos de la solicitud. Por ahora solo se simula el
-     * envío en el frontend, sin conexión a un backend real.
-     */
-    window.setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("submit failed");
       setStatus("sent");
-    }, 1200);
+    } catch {
+      setStatus("error");
+    }
   }
 
   if (status === "sent") {
@@ -198,6 +200,13 @@ export default function ContactForm() {
         Al enviar este formulario, el equipo de Jireh Contractor se pondrá en
         contacto contigo pronto.
       </p>
+
+      {status === "error" && (
+        <p className="mt-4 text-sm text-red-600">
+          No pudimos enviar tu solicitud. Probá de nuevo en un momento, o
+          escribinos directo si el problema sigue.
+        </p>
+      )}
 
       <button
         type="submit"

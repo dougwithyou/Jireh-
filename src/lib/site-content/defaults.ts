@@ -195,4 +195,7 @@ export const defaultSiteContent: SiteContent = {
     facebookUrl: "#",
     instagramUrl: "#",
   },
+  notifications: {
+    notificationEmail: "dougcard94@gmail.com",
+  },
 };
